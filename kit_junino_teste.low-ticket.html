@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit Festa Junina Pedagógico | Coleção Completa 1º ao 9º Ano</title>
+<meta name="description" content="Coleção completa de atividades pedagógicas de Festa Junina para o Ensino Fundamental. Do 1º ao 9º ano. Acesso imediato. Economize horas de planejamento!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0D0618;font-family:'Inter',sans-serif;color:#fff;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#1A0A2E}
+::-webkit-scrollbar-thumb{background:#E8A020;border-radius:3px}
+@keyframes desfilar{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.bandeiras-wrap{display:flex;animation:desfilar 20s linear infinite}
+.bandeirinha{display:inline-block;width:24px;height:32px;margin:0 3px;flex-shrink:0;clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0}
+.fade-up.vis{animation:fadeUp 0.6s ease forwards}
+@keyframes pulsaDourado{0%,100%{box-shadow:0 6px 28px rgba(232,160,32,0.4)}50%{box-shadow:0 6px 28px rgba(232,160,32,0.75),0 0 0 10px rgba(232,160,32,0.12)}}
+.pulsa{animation:pulsaDourado 2.5s ease-in-out infinite}
+@media(max-width:640px){
+  .hero-grid{grid-template-columns:1fr!important}
+  .hero-svg{display:none!important}
+  .planos-grid{grid-template-columns:1fr!important}
+  .plano-dest{transform:scale(1)!important}
+  .stats-grid{grid-template-columns:repeat(2,1fr)!important}
+  .dep-grid{grid-template-columns:1fr!important}
+  .prob-grid{grid-template-columns:1fr!important}
+  .series-grid{grid-template-columns:1fr!important}
+  .brinc-grid{grid-template-columns:repeat(2,1fr)!important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const {useState, useEffect, useRef} = React;
+const h = React.createElement;
+
+const C = {
+  escuro:"#0D0618", roxo:"#1A0A2E", roxoMed:"#2D1554",
+  dourado:"#E8A020", vermelho:"#C8320A", verde:"#1E7A4A",
+  branco:"#FFFFFF", suave:"#8B7AAE"
+};
+
+const PLANOS = [
+  {id:"basico", nome:"Essencial", tag:null, preco:"8,90", precoDe:"27",
+   desc:"Para quem precisa de material para uma turma específica.",
+   itens:["Coleção completa 1º ao 5º ano","Atividades de Língua Portuguesa e Matemática","6 brincadeiras com roteiro de aplicação","Acesso digital imediato","Garantia de 7 dias"],
+   dest:false, cta:"Quero o Essencial", link:"https://pay.cakto.com.br/SEU-LINK-ESSENCIAL"},
+  {id:"completo", nome:"Completo", tag:"MAIS VENDIDO", preco:"12,90", precoDe:"47",
+   desc:"O favorito dos professores que atendem todas as turmas.",
+   itens:["Tudo do Essencial +","Coleção 6º ao 9º ano inclusa","15+ brincadeiras e dinâmicas em grupo","Material multidisciplinar (Ciências, Geografia, Arte)","Roteiros de aula prontos para usar","Acesso digital imediato","Garantia de 7 dias"],
+   dest:true, cta:"Quero o Completo", link:"https://pay.cakto.com.br/SEU-LINK-COMPLETO"},
+  {id:"vip", nome:"VIP Escola", tag:"MELHOR CUSTO", preco:"16,90", precoDe:"67",
+   desc:"Para coordenadores e escolas que querem tudo resolvido.",
+   itens:["Tudo do Completo +","Licença para uso em toda a escola","Planejamento de festa junina passo a passo","Roteiro de quadrilha com marcações","Kit decoração digital (cartazes e faixas)","Suporte prioritário via WhatsApp","Garantia de 7 dias"],
+   dest:false, cta:"Quero o VIP Escola", link:"https://pay.cakto.com.br/SEU-LINK-VIP"},
+];
+
+const DEPS = [
+  {nome:"Ana Paula R.", cargo:"Professora do 3º ano", cidade:"São Paulo, SP", av:"AP", cor:"#2D1554",
+   texto:"Organizei a festa junina inteira em uma tarde. Nunca tinha conseguido isso nos 8 anos que dou aula. O material é tão bem feito que os pais perguntaram se contratamos uma empresa de eventos."},
+  {nome:"Carla Mendonça", cargo:"Coordenadora Pedagógica", cidade:"Belo Horizonte, MG", av:"CM", cor:"#1E7A4A",
+   texto:"Comprei o VIP para a escola inteira. Doze professores usando, do 1º ao 9º ano, todos satisfeitos. A melhor festa junina que já fizemos."},
+  {nome:"Juliana Santos", cargo:"Mãe de aluno e reforço escolar", cidade:"Rio de Janeiro, RJ", av:"JS", cor:"#C8320A",
+   texto:"Uso para as aulas de reforço e também com meu filho em casa. As atividades têm uma qualidade que você não encontra nem em livros didáticos. Vale muito mais do que paguei."},
+  {nome:"Roberto Lima", cargo:"Professor de Educação Física", cidade:"Recife, PE", av:"RL", cor:"#1A0A2E",
+   texto:"As brincadeiras vêm com roteiro completo de aplicação e variações de dificuldade. Nunca vi isso em nenhum outro material. Recomendei para todos os colegas."},
+];
+
+const FAQS = [
+  {q:"Como acesso o material após a compra?", r:"Assim que o pagamento é confirmado — em menos de 2 minutos — você recebe um e-mail com seu acesso pessoal. Baixa tudo de uma vez ou por seção, como preferir."},
+  {q:"Funciona no celular e no tablet?", r:"Sim. O material é otimizado para todos os dispositivos. Você pode visualizar e imprimir direto do celular ou enviar para qualquer gráfica."},
+  {q:"Posso imprimir em impressora comum?", r:"Com certeza. Tudo funciona perfeitamente em impressoras domésticas, colorido ou preto e branco. Nada perde qualidade."},
+  {q:"Posso usar para mais de uma turma?", r:"Sim. O Essencial e o Completo são para uso pessoal — quantas turmas suas quiser. O VIP Escola libera uso para toda a instituição."},
+  {q:"Qual a diferença entre os planos?", r:"O Essencial cobre 1º ao 5º ano. O Completo adiciona 6º ao 9º ano e material multidisciplinar. O VIP Escola inclui licença institucional, kit de decoração e suporte direto."},
+  {q:"E se eu não gostar?", r:"7 dias de garantia total. Se por qualquer motivo não ficar satisfeita, devolvemos 100% do valor pago. Sem burocracia, sem perguntas."},
+];
+
+function useInView(ref) {
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if(e.isIntersecting) setVis(true); }, {threshold:0.1});
+    if(ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return vis;
+}
+
+function FadeUp({children, delay=0, style={}, className=""}) {
+  const ref = useRef(null);
+  const vis = useInView(ref);
+  return h('div', {ref, className:"fade-up"+(vis?" vis":""), style:{animationDelay:delay+"ms",...style}}, children);
+}
+
+function Contador({target, suf=""}) {
+  const [val, setVal] = useState(0);
+  const ref = useRef(null);
+  const vis = useInView(ref);
+  useEffect(() => {
+    if(!vis) return;
+    let n=0; const step=target/40;
+    const t = setInterval(() => { n+=step; if(n>=target){setVal(target);clearInterval(t);}else setVal(Math.floor(n)); }, 35);
+    return () => clearInterval(t);
+  }, [vis, target]);
+  return h('span', {ref}, val+suf);
+}
+
+function Bandeiras() {
+  const cores = ["#E8A020","#C8320A","#1E7A4A","#9C27B0","#1565C0","#F06292","#F5C842","#FF7043"];
+  return h('div', {style:{width:"100%",overflow:"hidden",height:48,background:C.escuro,display:"flex",alignItems:"center",position:"sticky",top:0,zIndex:200}},
+    h('div', {className:"bandeiras-wrap"},
+      Array.from({length:120}).map((_,i) => h('span',{key:i,className:"bandeirinha",style:{background:cores[i%cores.length]}}))
+    )
+  );
+}
+
+function FaqItem({q, r}) {
+  const [open, setOpen] = useState(false);
+  return h('div', {
+    onClick:()=>setOpen(!open),
+    style:{background:C.roxoMed,borderRadius:14,marginBottom:10,overflow:"hidden",cursor:"pointer",border:`1px solid ${open?C.dourado:"rgba(232,160,32,0.15)"}`,transition:"border-color 0.2s"}
+  },
+    h('div', {style:{padding:"18px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:16}},
+      h('span', {style:{fontWeight:600,fontSize:15,color:C.branco}}, q),
+      h('span', {style:{color:C.dourado,fontSize:22,flexShrink:0,transform:open?"rotate(45deg)":"none",transition:"transform 0.25s",lineHeight:1}}, "+")
+    ),
+    open && h('div', {style:{padding:"0 24px 18px",fontSize:14,color:C.suave,lineHeight:1.8}}, r)
+  );
+}
+
+function PlanoCard({p, sel, onSel}) {
+  const dest = p.dest;
+  return h('div', {
+    onClick:()=>onSel(p.id),
+    className: dest?"plano-dest":"",
+    style:{
+      background: dest?"linear-gradient(145deg,#2D1554,#1A0A2E)":C.roxo,
+      borderRadius:20, border:`2px solid ${dest||sel===p.id?C.dourado:"rgba(232,160,32,0.2)"}`,
+      padding:"32px 28px", cursor:"pointer", position:"relative",
+      transform:dest?"scale(1.04)":"scale(1)",
+      transition:"transform 0.2s,border-color 0.2s,box-shadow 0.2s",
+      boxShadow:dest?"0 20px 60px rgba(232,160,32,0.2)":"none",
+    }
+  },
+    p.tag && h('div', {style:{
+      position:"absolute",top:-14,left:"50%",transform:"translateX(-50%)",
+      background:dest?C.dourado:C.verde, color:dest?C.escuro:C.branco,
+      fontSize:11,fontWeight:800,letterSpacing:1.5,padding:"5px 18px",borderRadius:20,whiteSpace:"nowrap"
+    }}, p.tag),
+    h('div',{style:{fontSize:13,fontWeight:700,color:C.suave,letterSpacing:1,textTransform:"uppercase",marginBottom:6}},p.nome),
+    h('div',{style:{marginBottom:4}}, h('span',{style:{fontSize:13,color:C.suave,textDecoration:"line-through"}},"R$ "+p.precoDe)),
+    h('div',{style:{fontSize:48,fontWeight:900,color:dest?C.dourado:C.branco,lineHeight:1,marginBottom:4}},"R$ "+p.preco),
+    h('div',{style:{fontSize:12,color:C.suave,marginBottom:20}},"pagamento único"),
+    h('div',{style:{fontSize:13,color:C.suave,marginBottom:20,lineHeight:1.6}},p.desc),
+    h('div',{style:{borderTop:"1px solid rgba(232,160,32,0.15)",paddingTop:20,marginBottom:24}},
+      p.itens.map((item,i)=>h('div',{key:i,style:{display:"flex",alignItems:"flex-start",gap:10,marginBottom:10}},
+        h('span',{style:{color:C.dourado,fontSize:14,flexShrink:0,marginTop:1}},"✦"),
+        h('span',{style:{fontSize:13,color:"#D4C8F0",lineHeight:1.5}},item)
+      ))
+    ),
+    h('a',{href:p.link,target:"_blank",rel:"noopener",
+      className:dest?"pulsa":"",
+      style:{display:"block",width:"100%",padding:"15px 0",borderRadius:50,border:"none",
+        background:dest?C.dourado:"rgba(232,160,32,0.12)",color:dest?C.escuro:C.dourado,
+        fontWeight:700,fontSize:15,cursor:"pointer",textAlign:"center",textDecoration:"none"}
+    }, p.cta)
+  );
+}
+
+function Tag({children, style={}}) {
+  return h('div',{style:{display:"inline-block",background:"rgba(232,160,32,0.12)",border:"1px solid rgba(232,160,32,0.3)",color:C.dourado,fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",padding:"6px 18px",borderRadius:20,marginBottom:20,...style}},children);
+}
+
+function Titulo({children, style={}}) {
+  return h('h2',{style:{fontFamily:"'Playfair Display',serif",fontSize:"clamp(26px,4vw,42px)",color:C.branco,marginBottom:16,lineHeight:1.2,...style}},children);
+}
+
+function App() {
+  const [sel, setSel] = useState("completo");
+  const [timer, setTimer] = useState(15*60);
+  useEffect(()=>{ const t=setInterval(()=>setTimer(p=>p>0?p-1:0),1000); return()=>clearInterval(t); },[]);
+  const mm=String(Math.floor(timer/60)).padStart(2,"0");
+  const ss=String(timer%60).padStart(2,"0");
+
+  return h('div',{style:{fontFamily:"'Inter',sans-serif",background:C.escuro,color:C.branco,overflowX:"hidden"}},
+
+    // BANDEIRAS
+    h(Bandeiras),
+
+    // URGÊNCIA
+    h('div',{style:{background:C.vermelho,color:C.branco,textAlign:"center",padding:"12px 20px",fontSize:14,fontWeight:600}},
+      "⏰ Oferta de lançamento expira em ",
+      h('span',{style:{fontWeight:900,fontSize:16,letterSpacing:1}},mm+":"+ss),
+      " — aproveite antes que o preço suba"
+    ),
+
+    // HERO
+    h('section',{style:{padding:"80px 20px 100px",position:"relative",overflow:"hidden"}},
+      h('div',{style:{position:"absolute",inset:0,opacity:0.06,backgroundImage:"radial-gradient(circle at 20% 50%,#E8A020 0%,transparent 60%),radial-gradient(circle at 80% 30%,#C8320A 0%,transparent 55%)",pointerEvents:"none"}}),
+      h('div',{style:{maxWidth:960,margin:"0 auto"}},
+        h('div',{className:"hero-grid",style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center"}},
+          h('div',null,
+            h(FadeUp,null, h(Tag,null,"🎪 Coleção Pedagógica Exclusiva")),
+            h(FadeUp,{delay:80},
+              h('h1',{style:{fontFamily:"'Playfair Display',serif",fontSize:"clamp(34px,5vw,58px)",fontWeight:900,lineHeight:1.1,marginBottom:24,color:C.branco}},
+                "Sua Festa Junina",h('br')," ",h('span',{style:{color:C.dourado}},"pronta para brilhar"),h('br')," sem horas de trabalho"
+              )
+            ),
+            h(FadeUp,{delay:160},
+              h('p',{style:{fontSize:17,color:"#B8A8D8",lineHeight:1.8,marginBottom:36,maxWidth:460}},
+                "O sistema completo de atividades, brincadeiras e dinâmicas juninas que professores e coordenadores de todo o Brasil usam para transformar o arraial escolar em um sucesso — em minutos, não em dias."
+              )
+            ),
+            h(FadeUp,{delay:240},
+              h('a',{href:"#planos",style:{display:"inline-block",background:C.dourado,color:C.escuro,fontWeight:800,fontSize:17,padding:"18px 44px",borderRadius:50,cursor:"pointer",border:"none",textDecoration:"none"},className:"pulsa"},
+                "🎊 Ver os planos e preços"
+              ),
+              h('div',{style:{display:"flex",gap:24,marginTop:24,flexWrap:"wrap"}},
+                ["Acesso imediato","Garantia de 7 dias","Funciona em qualquer dispositivo"].map((t,i)=>
+                  h('div',{key:i,style:{display:"flex",alignItems:"center",gap:8,fontSize:13,color:C.suave}},
+                    h('span',{style:{color:C.dourado}},"✓")," ",t
+                  )
+                )
+              )
+            )
+          ),
+          // SVG HERO
+          h(FadeUp,{delay:300,style:{display:"flex",justifyContent:"center"},className:"hero-svg"},
+            h('svg',{viewBox:"0 0 380 400",width:"100%",style:{maxWidth:380},"aria-hidden":"true"},
+              h('ellipse',{cx:190,cy:160,rx:110,ry:130,fill:"#2D1554"}),
+              h('ellipse',{cx:190,cy:160,rx:110,ry:130,fill:"none",stroke:"#E8A020",strokeWidth:2,strokeDasharray:"6 4",opacity:0.5}),
+              h('path',{d:"M80 160 Q120 130 190 145 Q260 130 300 160",stroke:"#E8A020",strokeWidth:2.5,fill:"none",opacity:0.6}),
+              h('path',{d:"M82 185 Q122 165 190 175 Q258 165 298 185",stroke:"#C8320A",strokeWidth:2.5,fill:"none",opacity:0.5}),
+              h('path',{d:"M88 208 Q128 193 190 200 Q252 193 292 208",stroke:"#1E7A4A",strokeWidth:2,fill:"none",opacity:0.5}),
+              h('ellipse',{cx:155,cy:100,rx:28,ry:18,fill:"white",opacity:0.08}),
+              h('path',{d:"M170 287 Q190 298 210 287",fill:"#7A3B1E"}),
+              h('rect',{x:148,y:300,width:84,height:52,rx:10,fill:"#5C3010"}),
+              h('rect',{x:152,y:304,width:76,height:44,rx:8,fill:"#7A4520"}),
+              h('line',{x1:168,y1:304,x2:168,y2:348,stroke:"#5C3010",strokeWidth:1.5}),
+              h('line',{x1:190,y1:304,x2:190,y2:348,stroke:"#5C3010",strokeWidth:1.5}),
+              h('line',{x1:212,y1:304,x2:212,y2:348,stroke:"#5C3010",strokeWidth:1.5}),
+              h('line',{x1:152,y1:318,x2:228,y2:318,stroke:"#5C3010",strokeWidth:1.5}),
+              h('line',{x1:152,y1:332,x2:228,y2:332,stroke:"#5C3010",strokeWidth:1.5}),
+              h('line',{x1:155,y1:300,x2:172,y2:287,stroke:"#E8A020",strokeWidth:2}),
+              h('line',{x1:225,y1:300,x2:208,y2:287,stroke:"#E8A020",strokeWidth:2}),
+              h('text',{x:190,y:175,textAnchor:"middle",fontSize:52,fill:"white",opacity:0.9},"🎪"),
+              h('circle',{cx:48,cy:80,r:5,fill:"#E8A020",opacity:0.7},
+                h('animate',{attributeName:"opacity",values:"0.7;0.2;0.7",dur:"3s",repeatCount:"indefinite"})
+              ),
+              h('circle',{cx:330,cy:100,r:4,fill:"#C8320A",opacity:0.7},
+                h('animate',{attributeName:"opacity",values:"0.7;0.2;0.7",dur:"2.3s",repeatCount:"indefinite"})
+              ),
+              h('rect',{x:260,y:55,width:115,height:50,rx:12,fill:"#E8A020"}),
+              h('text',{x:317,y:76,textAnchor:"middle",fontSize:11,fill:"#0D0618",fontWeight:"bold"},"+120 atividades"),
+              h('text',{x:317,y:93,textAnchor:"middle",fontSize:10,fill:"#3D2010"},"1º ao 9º ano"),
+              h('rect',{x:10,y:220,width:100,height:44,rx:10,fill:"#1E7A4A"}),
+              h('text',{x:60,y:239,textAnchor:"middle",fontSize:10,fill:"white",fontWeight:"bold"},"🛡️ Garantia"),
+              h('text',{x:60,y:256,textAnchor:"middle",fontSize:10,fill:"#A8DFC0"},"7 dias")
+            )
+          )
+        )
+      )
+    ),
+
+    // STATS
+    h('div',{style:{background:C.roxo,padding:"40px 20px",borderTop:"1px solid rgba(232,160,32,0.15)",borderBottom:"1px solid rgba(232,160,32,0.15)"}},
+      h('div',{className:"stats-grid",style:{maxWidth:860,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:20,textAlign:"center"}},
+        [{n:120,s:"+",l:"atividades na coleção"},{n:9,s:"",l:"anos do ensino fundamental"},{n:3000,s:"+",l:"educadores atendidos"},{n:20,s:"h+",l:"economizadas por edição"}]
+        .map((item,i)=>h(FadeUp,{key:i,delay:i*80},
+          h('div',{style:{fontFamily:"'Playfair Display',serif",fontSize:44,fontWeight:900,color:C.dourado,lineHeight:1}},
+            h(Contador,{target:item.n,suf:item.s})
+          ),
+          h('div',{style:{fontSize:13,color:C.suave,marginTop:6}},item.l)
+        ))
+      )
+    ),
+
+    // PROBLEMA
+    h('section',{style:{padding:"80px 20px"}},
+      h('div',{style:{maxWidth:860,margin:"0 auto"}},
+        h(FadeUp,{style:{textAlign:"center",marginBottom:60}},
+          h('div',{style:{display:"inline-block",background:"rgba(200,50,10,0.12)",border:"1px solid rgba(200,50,10,0.3)",color:"#FF7A5A",fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",padding:"6px 18px",borderRadius:20,marginBottom:20}},
+            "Você se identifica?"
+          ),
+          h('h2',{style:{fontFamily:"'Playfair Display',serif",fontSize:"clamp(26px,4vw,40px)",color:C.branco,lineHeight:1.2}},
+            "A Festa Junina é linda — o ",h('br'),h('span',{style:{color:"#FF7A5A"}},"planejamento, nem sempre")
+          )
+        ),
+        h('div',{className:"prob-grid",style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}},
+          [{e:"😩",t:"Horas procurando atividade",d:"Você passa tardes inteiras no Google tentando achar algo educativo, divertido e adequado para a faixa etária certa."},
+           {e:"📋",t:"Planejamento de última hora",d:"A Festa Junina aparece no calendário e você ainda não tem nada pronto. A pressão aumenta, o tempo diminui, o estresse dobra."},
+           {e:"😕",t:"Material genérico ou ruim",d:"Os materiais gratuitos são sempre do mesmo padrão: muito simples, sem relação com a BNCC, ou visualmente ruins."}]
+          .map((c,i)=>h(FadeUp,{key:i,delay:i*100},
+            h('div',{style:{background:"rgba(200,50,10,0.08)",border:"1px solid rgba(200,50,10,0.2)",borderRadius:16,padding:28,height:"100%"}},
+              h('div',{style:{fontSize:36,marginBottom:14}},c.e),
+              h('div',{style:{fontWeight:700,fontSize:15,color:C.branco,marginBottom:10}},c.t),
+              h('div',{style:{fontSize:13,color:C.suave,lineHeight:1.7}},c.d)
+            )
+          ))
+        ),
+        h(FadeUp,{delay:200,style:{textAlign:"center",marginTop:52}},
+          h('div',{style:{fontSize:36,marginBottom:16}},"↓"),
+          h('p',{style:{fontSize:20,fontWeight:700,color:C.dourado}},"Existe uma forma mais inteligente de fazer isso.")
+        )
+      )
+    ),
+
+    // COLEÇÃO
+    h('section',{style:{background:C.roxo,padding:"80px 20px",borderTop:"1px solid rgba(232,160,32,0.1)",borderBottom:"1px solid rgba(232,160,32,0.1)"}},
+      h('div',{style:{maxWidth:860,margin:"0 auto"}},
+        h(FadeUp,{style:{textAlign:"center",marginBottom:56}},
+          h(Tag,null,"A coleção"),
+          h(Titulo,null,"Tudo organizado, do 1º ao 9º ano,",h('br'),h('span',{style:{color:C.dourado}}," pronto para aplicar amanhã")),
+          h('p',{style:{fontSize:16,color:C.suave,maxWidth:540,margin:"0 auto",lineHeight:1.7}},"Cada série tem sua própria coleção de materiais com objetivos pedagógicos claros e linguagem adequada para a faixa etária.")
+        ),
+        h('div',{className:"series-grid",style:{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:16}},
+          [{serie:"1º e 2º ano",cor:C.dourado,icone:"🌟",itens:["Atividades de colorir temáticas","Coordenação motora e traçado","Caça-palavras ilustrado","Alfabetização com tema junino","Produção oral com fantoches"]},
+           {serie:"3º e 4º ano",cor:"#F06292",icone:"📖",itens:["Interpretação de texto junino","Produção de convite e carta","Problemas matemáticos temáticos","Desafios de raciocínio lógico","Pesquisa histórica orientada"]},
+           {serie:"5º ano",cor:"#42A5F5",icone:"🌍",itens:["Atividades multidisciplinares","Ciências: plantas e comidas típicas","Geografia: regiões do Brasil junino","Arte: criação de adereços","Projeto interdisciplinar completo"]},
+           {serie:"6º ao 9º ano",cor:C.verde,icone:"🎭",itens:["Interpretação textual aprofundada","Produção: crônica, poema, conto","Análise histórica e cultural","Dinâmicas e jogos em grupo","Quiz pedagógico por série"]}]
+          .map((s,i)=>h(FadeUp,{key:i,delay:i*80},
+            h('div',{style:{background:C.escuro,borderRadius:16,padding:26,border:`1px solid ${s.cor}30`,height:"100%"}},
+              h('div',{style:{display:"flex",alignItems:"center",gap:12,marginBottom:20}},
+                h('div',{style:{width:44,height:44,background:s.cor+"20",borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}},s.icone),
+                h('div',null,
+                  h('div',{style:{fontSize:12,color:C.suave}}, "Série"),
+                  h('div',{style:{fontWeight:800,fontSize:18,color:s.cor}},s.serie)
+                )
+              ),
+              s.itens.map((item,j)=>h('div',{key:j,style:{display:"flex",gap:10,marginBottom:9,alignItems:"flex-start"}},
+                h('span',{style:{color:s.cor,fontSize:12,flexShrink:0,marginTop:3}},"✦"),
+                h('span',{style:{fontSize:13,color:"#C8B8E8",lineHeight:1.5}},item)
+              ))
+            )
+          ))
+        )
+      )
+    ),
+
+    // BRINCADEIRAS
+    h('section',{style:{padding:"80px 20px"}},
+      h('div',{style:{maxWidth:860,margin:"0 auto"}},
+        h(FadeUp,{style:{textAlign:"center",marginBottom:52}},
+          h(Tag,null,"🎪 Brincadeiras"),
+          h(Titulo,null,"15+ brincadeiras com ",h('span',{style:{color:C.dourado}},"roteiro pedagógico completo")),
+          h('p',{style:{color:C.suave,fontSize:15,maxWidth:500,margin:"0 auto",lineHeight:1.7}},"Cada brincadeira vem com regras, objetivo de aprendizagem, variações por faixa etária e dica de avaliação.")
+        ),
+        h('div',{className:"brinc-grid",style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}},
+          [{e:"🏃",n:"Corrida do Saco",d:"Equilíbrio, cooperação e controle motor"},
+           {e:"🎣",n:"Pescaria Pedagógica",d:"Versão com perguntas de revisão de conteúdo"},
+           {e:"🤡",n:"Boca do Palhaço",d:"Pontaria e concentração — adaptação educativa"},
+           {e:"💌",n:"Correio Elegante",d:"Produção escrita e comunicação respeitosa"},
+           {e:"💃",n:"Quadrilha Junina",d:"Roteiro completo com chamadas tradicionais"},
+           {e:"🥚",n:"Corrida do Ovo",d:"Autocontrole e regulação emocional"}]
+          .map((b,i)=>h(FadeUp,{key:i,delay:i*60},
+            h('div',{style:{background:C.roxo,borderRadius:14,padding:"22px 18px",border:"1px solid rgba(232,160,32,0.12)",textAlign:"center"}},
+              h('div',{style:{fontSize:38,marginBottom:10}},b.e),
+              h('div',{style:{fontWeight:700,fontSize:14,color:C.branco,marginBottom:7}},b.n),
+              h('div',{style:{fontSize:12,color:C.suave,lineHeight:1.6}},b.d)
+            )
+          ))
+        )
+      )
+    ),
+
+    // DEPOIMENTOS
+    h('section',{style:{background:C.roxo,padding:"80px 20px",borderTop:"1px solid rgba(232,160,32,0.1)",borderBottom:"1px solid rgba(232,160,32,0.1)"}},
+      h('div',{style:{maxWidth:900,margin:"0 auto"}},
+        h(FadeUp,{style:{textAlign:"center",marginBottom:52}},
+          h(Tag,null,"💬 Depoimentos"),
+          h(Titulo,null,"O que educadores estão dizendo")
+        ),
+        h('div',{className:"dep-grid",style:{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:20}},
+          DEPS.map((d,i)=>h(FadeUp,{key:i,delay:i*80},
+            h('div',{style:{background:C.escuro,borderRadius:18,padding:28,border:"1px solid rgba(232,160,32,0.12)"}},
+              h('div',{style:{display:"flex",gap:2,marginBottom:12}},
+                Array.from({length:5}).map((_,j)=>h('span',{key:j,style:{color:C.dourado,fontSize:16}},"★"))
+              ),
+              h('p',{style:{fontSize:15,color:"#C8B8E8",lineHeight:1.8,marginBottom:24,fontStyle:"italic"}},'"'+d.texto+'"'),
+              h('div',{style:{display:"flex",alignItems:"center",gap:12}},
+                h('div',{style:{width:42,height:42,borderRadius:"50%",background:d.cor,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:14,color:C.branco,flexShrink:0}},d.av),
+                h('div',null,
+                  h('div',{style:{fontWeight:700,fontSize:14,color:C.branco}},d.nome),
+                  h('div',{style:{fontSize:12,color:C.suave}},d.cargo+" — "+d.cidade)
+                )
+              )
+            )
+          ))
+        )
+      )
+    ),
+
+    // PLANOS
+    h('section',{id:"planos",style:{padding:"90px 20px"}},
+      h('div',{style:{maxWidth:980,margin:"0 auto"}},
+        h(FadeUp,{style:{textAlign:"center",marginBottom:60}},
+          h(Tag,null,"🎁 Escolha seu plano"),
+          h(Titulo,null,"Invista uma vez. Use para sempre."),
+          h('p',{style:{fontSize:16,color:C.suave,maxWidth:500,margin:"0 auto",lineHeight:1.7}},"Sem mensalidade, sem renovação automática. Escolha o plano certo para você.")
+        ),
+        h('div',{className:"planos-grid",style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20,alignItems:"start"}},
+          PLANOS.map(p=>h(FadeUp,{key:p.id},h(PlanoCard,{p,sel,onSel:setSel})))
+        ),
+        h(FadeUp,{delay:200,style:{textAlign:"center",marginTop:48}},
+          h('a',{href:PLANOS.find(p=>p.id===sel).link,target:"_blank",rel:"noopener",
+            style:{display:"inline-block",background:C.dourado,color:C.escuro,fontWeight:800,fontSize:18,padding:"20px 56px",borderRadius:50,textDecoration:"none"},
+            className:"pulsa"
+          },"🎊 Garantir meu acesso agora"),
+          h('div',{style:{display:"flex",justifyContent:"center",gap:20,flexWrap:"wrap",marginTop:20}},
+            ["💳 Cartão de crédito","⚡ PIX instantâneo","🔒 Ambiente seguro","📧 Acesso imediato"]
+            .map((t,i)=>h('span',{key:i,style:{fontSize:13,color:C.suave}},t))
+          ),
+          h('div',{style:{marginTop:24,display:"flex",alignItems:"center",justifyContent:"center",gap:10,color:C.suave,fontSize:14}},
+            h('span',{style:{fontSize:22}},"🛡️"),
+            h('span',null,h('strong',{style:{color:C.branco}},"Garantia de 7 dias.")," Se não ficar satisfeita, devolvemos 100% do valor.")
+          )
+        )
+      )
+    ),
+
+    // FAQ
+    h('section',{style:{background:C.roxo,padding:"80px 20px",borderTop:"1px solid rgba(232,160,32,0.1)"}},
+      h('div',{style:{maxWidth:720,margin:"0 auto"}},
+        h(FadeUp,{style:{textAlign:"center",marginBottom:48}},
+          h(Tag,null,"❓ Dúvidas"),
+          h(Titulo,null,"Perguntas frequentes")
+        ),
+        FAQS.map((f,i)=>h(FaqItem,{key:i,q:f.q,r:f.r}))
+      )
+    ),
+
+    // CTA FINAL
+    h('section',{style:{padding:"90px 20px",textAlign:"center"}},
+      h('div',{style:{maxWidth:680,margin:"0 auto"}},
+        h(FadeUp,null,
+          h('div',{style:{fontSize:48,marginBottom:20}},"🎪"),
+          h('h2',{style:{fontFamily:"'Playfair Display',serif",fontSize:"clamp(28px,4vw,46px)",color:C.branco,marginBottom:20,lineHeight:1.2}},
+            "A sua festa junina mais ",h('br'),h('span',{style:{color:C.dourado}},"bonita e organizada"),h('br')," começa agora"
+          ),
+          h('p',{style:{fontSize:16,color:C.suave,marginBottom:40,lineHeight:1.7}},"Mais de 3.000 educadores já transformaram o arraial escolar com essa coleção. Junte-se a eles."),
+          h('a',{href:"#planos",style:{display:"inline-block",background:C.dourado,color:C.escuro,fontWeight:800,fontSize:18,padding:"20px 52px",borderRadius:50,textDecoration:"none"},className:"pulsa"},
+            "🎊 Quero garantir meu acesso"
+          ),
+          h('p',{style:{color:C.suave,fontSize:13,marginTop:16}},"A partir de R$ 8,90 · Pagamento único · Garantia de 7 dias")
+        )
+      )
+    ),
+
+    // FOOTER
+    h('footer',{style:{background:C.roxo,borderTop:"1px solid rgba(232,160,32,0.15)",padding:"36px 20px",textAlign:"center"}},
+      h('p',{style:{fontSize:13,color:C.suave,lineHeight:2}},
+        "© 2025 Coleção Pedagógica Festa Junina. Todos os direitos reservados.",h('br'),
+        "Produto digital. Entrega por e-mail após confirmação do pagamento.",h('br'),
+        h('a',{href:"#",style:{color:C.dourado}},"Política de Privacidade")," · ",
+        h('a',{href:"#",style:{color:C.dourado}},"Termos de Uso")," · ",
+        h('a',{href:"#",style:{color:C.dourado}},"Suporte")
+      ),
+      h('p',{style:{marginTop:12,fontSize:12,color:"#4A3870"}},"Plataforma de pagamento: Cakto · Ambiente 100% seguro")
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script>
+</body>
+</html>
